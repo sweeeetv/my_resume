@@ -45,13 +45,17 @@ resource "azurerm_function_app_flex_consumption" "visiter_counter_api" {
   # environment variables for the function app.
   app_settings = {
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.visiter_counter_appInsights.connection_string
-    # Cosmos settings environment variables:
-  #   COSMOS_ENDPOINT   = azurerm_cosmosdb_account.counter_db.endpoint
-  #   COSMOS_KEY        = azurerm_cosmosdb_account.counter_db.primary_master_key
-  #   COSMOS_TABLE_NAME = azurerm_cosmosdb_table.counter_table.name
+    COSMOS_DB_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=${azurerm_cosmosdb_account.counter_db.name};AccountKey=${azurerm_cosmosdb_account.counter_db.primary_key};TableEndpoint=https://${azurerm_cosmosdb_account.counter_db.name}.table.cosmos.azure.com:443/;"
    }
 
   site_config {
+    cors {
+      allowed_origins = [
+        "https://${azurerm_storage_account.crc.primary_web_host}",
+        "https://pp.weirdcloud.dev", 
+        "http://localhost:5500"
+      ]
+    }
   }
 }
 

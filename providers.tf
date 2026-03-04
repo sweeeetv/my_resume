@@ -9,6 +9,13 @@ terraform {
       version = "~> 4.0"
     }
   }
+  # 4. store tfstate in Azure Storage with a unique key
+  backend "azurerm" {
+    resource_group_name  = "rg-terraform-state"
+    storage_account_name = "resume1771739033"
+    container_name       = "tfstate"
+    key                  = "resume-core.terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
@@ -16,4 +23,9 @@ provider "azurerm" {
   subscription_id = "bcd4fe40-938d-48e2-bea9-6425a552c4ab"
   features {
   }
+}
+
+provider "github" {
+  owner = "sweeeetv"
+  token = var.github_token
 }
